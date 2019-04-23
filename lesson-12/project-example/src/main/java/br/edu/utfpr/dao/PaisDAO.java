@@ -6,13 +6,14 @@ import java.sql.DriverManager;
 import br.edu.utfpr.dto.PaisDTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.java.Log;
 
 @Log
-public class PaisDAO {
+public class PaisDAO extends TemplateDAO{
 
     // Responsável por criar a tabela País no banco
     public PaisDAO() {
@@ -30,29 +31,45 @@ public class PaisDAO {
             e.printStackTrace();
         }
     }
-
-    public boolean incluir(PaisDTO pais) {
-        try ( Connection conn = DriverManager.getConnection("jdbc:derby:memory:database")) {
-
-            String sql = "INSERT INTO pais (nome, sigla, codigoTelefone) VALUES (?, ?, ?)";
-
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, pais.getNome());
-            statement.setString(2, pais.getSigla());
-            statement.setInt(3, pais.getCodigoTelefone());
-
-            int rowsInserted = statement.executeUpdate();
-
-            if (rowsInserted > 0) {
-                return true;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
+    
+    String getConexao() {
+    	return "jdbc:derby:memory:database";
     }
+    
+    String getInsertSql() {
+    	return "INSERT INTO pais (nome, sigla, codigoTelefone) VALUES (?, ?, ?)";
+    }
+    
+    PreparedStatement getIncluirPreparedStatement(String sql, Connection conn) throws SQLException {
+    	PreparedStatement statement = conn.prepareStatement(sql);
+    	//statement.setString(1, pais.getNome());
+      	//statement.setString(2, pais.getSigla());
+      	//statement.setInt(3, pais.getCodigoTelefone());
+    	return statement;
+    }
+    
+//    public boolean incluir(PaisDTO pais) {
+//        try ( Connection conn = DriverManager.getConnection("jdbc:derby:memory:database")) {
+//
+//            String sql = "INSERT INTO pais (nome, sigla, codigoTelefone) VALUES (?, ?, ?)";
+//
+//            PreparedStatement statement = conn.prepareStatement(sql);
+//            statement.setString(1, pais.getNome());
+//            statement.setString(2, pais.getSigla());
+//            statement.setInt(3, pais.getCodigoTelefone());
+//
+//            int rowsInserted = statement.executeUpdate();
+//
+//            if (rowsInserted > 0) {
+//                return true;
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return false;
+//    }
 
     public List<PaisDTO> listarTodos() {
 
@@ -64,8 +81,6 @@ public class PaisDAO {
 
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(sql);
-
-            int count = 0;
 
             while (result.next()) {
 
