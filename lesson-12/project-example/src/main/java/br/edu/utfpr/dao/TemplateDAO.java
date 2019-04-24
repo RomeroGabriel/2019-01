@@ -12,14 +12,25 @@ import java.util.List;
 public abstract class TemplateDAO {
 	
 	abstract String getConexao();
-
+	
+	abstract String getInsertSql();
+	abstract PreparedStatement getIncluirPreparedStatement(Object obj, PreparedStatement statement) throws SQLException;
+	
+	abstract String getListarTodosSql();
+	abstract List<Object> setObject(ResultSet obj) throws SQLException;
+	
+	abstract String getExcluirSql();
+	
+	abstract String getAlterarSql();
+	abstract PreparedStatement getAlterarPreparedStatement(Object obj, PreparedStatement statement) throws SQLException;
+	
 	final boolean incluir(Object obj) {
 		String conexao = getConexao();
 		try ( Connection conn = DriverManager.getConnection(conexao) ){
 			String sql = getInsertSql();
 			
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement = getIncluirPreparedStatement(sql, obj, statement);	
+			statement = getIncluirPreparedStatement(obj, statement);	
 			
 			int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
@@ -30,9 +41,6 @@ public abstract class TemplateDAO {
         }
 		return false;
 	}
-	
-	abstract String getInsertSql();
-	abstract PreparedStatement getIncluirPreparedStatement(String sql, Object obj, PreparedStatement statement) throws SQLException;
 	
 	final List<Object> listarTodos() {
 		
@@ -61,15 +69,12 @@ public abstract class TemplateDAO {
 		
 		return resultado;
 	}
-	
-	abstract String getListarTodosSql();
-	abstract List<Object> setObject(ResultSet obj) throws SQLException;
-	
+		
 	final boolean excluir(int id) {
 		String conexao = getConexao();
-		try ( Connection conn = DriverManager.getConnection(conexao) ){
-			String sql = getExcluirSql();
-					
+		try ( Connection conn = DriverManager.getConnection(conexao) ){	
+			
+	      String sql = getExcluirSql();					
           PreparedStatement statement = conn.prepareStatement(sql);
           statement.setInt(1, id);
 			
@@ -83,5 +88,28 @@ public abstract class TemplateDAO {
 		return true;
 	}
 	
-	abstract String getExcluirSql();
+	final boolean alterar(Object obj){		
+		String conexao = getConexao();
+		try ( Connection conn = DriverManager.getConnection(conexao) ){
+			
+			String sql = getAlterarSql();
+			
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement = getAlterarPreparedStatement(obj, statement);
+			
+			int rowsUpdated = statement.executeUpdate();
+			if (rowsUpdated > 0) 
+				return true;
+			
+		} catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+		return false;
+	}
+		
+	//final Object listarPorId (int id) {
+	//	return this.listarTodos().stream().filter(p -> p.getId() == id).findAny().orElseThrow(RuntimeException::new);
+	//}
+	
 }

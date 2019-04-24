@@ -39,7 +39,7 @@ public class PaisDAO extends TemplateDAO{
     	return "INSERT INTO pais (nome, sigla, codigoTelefone) VALUES (?, ?, ?)";
     }
     
-    PreparedStatement getIncluirPreparedStatement(String sql, Object obj, PreparedStatement statement) throws SQLException {
+    PreparedStatement getIncluirPreparedStatement(Object obj, PreparedStatement statement) throws SQLException {
     	PaisDTO pais = (PaisDTO) obj;
     	statement.setString(1, pais.getNome());
       	statement.setString(2, pais.getSigla());
@@ -69,27 +69,18 @@ public class PaisDAO extends TemplateDAO{
     String getExcluirSql() {
     	return "DELETE FROM pais WHERE id=?";
     }
+    
+    String getAlterarSql() {
+    	return "UPDATE pais SET nome=?, sigla=?, codigoTelefone=? WHERE id=?";
+    }
 
-    public boolean alterar(PaisDTO pais) {
-        try ( Connection conn = DriverManager.getConnection("jdbc:derby:memory:database")) {
-
-            String sql = "UPDATE pais SET nome=?, sigla=?, codigoTelefone=? WHERE id=?";
-
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, pais.getNome());
-            statement.setString(2, pais.getSigla());
-            statement.setInt(3, pais.getCodigoTelefone());
-            statement.setInt(4, pais.getId());
-
-            int rowsUpdated = statement.executeUpdate();
-            if (rowsUpdated > 0) 
-                return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return false;
+    PreparedStatement getAlterarPreparedStatement(Object obj, PreparedStatement statement) throws SQLException {
+    	PaisDTO pais = (PaisDTO) obj;
+    	statement.setString(1, pais.getNome());
+    	statement.setString(2, pais.getSigla());
+    	statement.setInt(3, pais.getCodigoTelefone());
+    	statement.setInt(4, pais.getId());
+    	return statement;
     }
     
     //public PaisDTO listarPorId (int id) {
