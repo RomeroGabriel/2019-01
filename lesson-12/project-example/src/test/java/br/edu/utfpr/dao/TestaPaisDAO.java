@@ -53,9 +53,9 @@ public class TestaPaisDAO {
 
         paisDAO.incluir(pais);
         
-        //PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> p.getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
+        PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> p.getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
 
-        //Assert.assertTrue(paisDAO.excluir(paisRecuperado.getId()));
+        Assert.assertTrue(paisDAO.excluir(paisRecuperado.getId()));
     }
 
     @Test
@@ -68,11 +68,11 @@ public class TestaPaisDAO {
 
         paisDAO.incluir(pais);
 
-        //PaisDTO paisRecuperado = paisDAO.listarTodos().stream().filter(p -> p.getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
+        PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> p.getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
 
-        //paisRecuperado.setNome("Reino Unido Alterado");
+        paisRecuperado.setNome("Reino Unido Alterado");
 
-        //Assert.assertTrue(paisDAO.alterar(paisRecuperado));
+        Assert.assertTrue(paisDAO.alterar(paisRecuperado));
     }
 
     @Test
@@ -85,9 +85,9 @@ public class TestaPaisDAO {
 
         paisDAO.incluir(pais);
 
-        //PaisDTO paisRecuperado = paisDAO.listarTodos().stream().filter(p -> p.getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
+        PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> p.getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
 
-        //Assert.assertTrue(paisDAO.listarPorId (paisRecuperado.getId()).getNome().equals(pais.getNome()));
+        Assert.assertTrue(paisDAO.listarPorId (paisRecuperado.getId()).getNome().equals(pais.getNome()));
 
     }
 

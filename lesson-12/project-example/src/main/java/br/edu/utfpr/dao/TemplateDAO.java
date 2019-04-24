@@ -24,6 +24,8 @@ public abstract class TemplateDAO {
 	abstract String getAlterarSql();
 	abstract PreparedStatement getAlterarPreparedStatement(Object obj, PreparedStatement statement) throws SQLException;
 	
+	abstract Object getObjectById(List<Object> allObjects, int id);
+	
 	final boolean incluir(Object obj) {
 		String conexao = getConexao();
 		try ( Connection conn = DriverManager.getConnection(conexao) ){
@@ -108,8 +110,10 @@ public abstract class TemplateDAO {
 		return false;
 	}
 		
-	//final Object listarPorId (int id) {
-	//	return this.listarTodos().stream().filter(p -> p.getId() == id).findAny().orElseThrow(RuntimeException::new);
-	//}
-	
+	final Object listarPorId (int id) {
+		
+		List<Object> allObjects = this.listarTodos();
+		Object obj = getObjectById(allObjects, id);
+		return obj;
+	}
 }
