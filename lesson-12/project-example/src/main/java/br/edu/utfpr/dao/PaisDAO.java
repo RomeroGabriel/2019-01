@@ -84,13 +84,6 @@ public class PaisDAO extends TemplateDAO{
     }
     
     Object getObjectById(List<Object> allObjects, int id) {
-    	Object result = null;
-    	PaisDTO aux = PaisDTO.builder().build();
-    	for(int i = 0; i < allObjects.size(); i++) {
-    		aux = (PaisDTO)allObjects.get(i);
-    		if(aux.getId() == id)
-    			result = aux;
-    	}
-    	return result;
+    	return this.listarTodos().stream().filter(p -> ((PaisDTO) p).getId() == id).findAny().orElseThrow(RuntimeException::new);
     }
 }

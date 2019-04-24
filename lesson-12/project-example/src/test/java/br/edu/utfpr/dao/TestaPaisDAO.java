@@ -2,7 +2,6 @@ package br.edu.utfpr.dao;
 
 import br.edu.utfpr.dto.PaisDTO;
 
-import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -53,7 +52,7 @@ public class TestaPaisDAO {
 
         paisDAO.incluir(pais);
         
-        PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> p.getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
+        PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> ((PaisDTO) p).getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
 
         Assert.assertTrue(paisDAO.excluir(paisRecuperado.getId()));
     }
@@ -62,16 +61,15 @@ public class TestaPaisDAO {
     public void testaAlterar() {
         PaisDTO pais = PaisDTO.builder()
                 .codigoTelefone(32)
-                .nome("Reino Unido")
+                .nome("Reino UnidoAAAAAAAAAAAAA")
                 .sigla("RU")
                 .build();
 
         paisDAO.incluir(pais);
 
-        PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> p.getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
-
-        paisRecuperado.setNome("Reino Unido Alterado");
-
+        PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> ((PaisDTO) p).getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
+        paisRecuperado.setNome("Reino Unido Alterado");          
+        
         Assert.assertTrue(paisDAO.alterar(paisRecuperado));
     }
 
@@ -85,9 +83,8 @@ public class TestaPaisDAO {
 
         paisDAO.incluir(pais);
 
-        PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> p.getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
-
-        Assert.assertTrue(paisDAO.listarPorId (paisRecuperado.getId()).getNome().equals(pais.getNome()));
+        PaisDTO paisRecuperado = (PaisDTO)paisDAO.listarTodos().stream().filter(p -> ((PaisDTO) p).getSigla().equalsIgnoreCase(pais.getSigla())).collect(Collectors.toList()).get(0);
+        Assert.assertTrue(((PaisDTO) paisDAO.listarPorId (paisRecuperado.getId())).getNome().equals(pais.getNome()));
 
     }
 
