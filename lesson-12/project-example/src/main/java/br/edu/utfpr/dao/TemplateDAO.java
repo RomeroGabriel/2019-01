@@ -24,7 +24,7 @@ public abstract class TemplateDAO {
 	abstract String getAlterarSql();
 	abstract PreparedStatement getAlterarPreparedStatement(Object obj, PreparedStatement statement) throws SQLException;
 	
-	abstract Object getObjectById(List<Object> allObjects, int id);
+	abstract Object getObjectById(int id);
 	
 	final boolean incluir(Object obj) {
 		String conexao = getConexao();
@@ -113,7 +113,7 @@ public abstract class TemplateDAO {
 	final Object listarPorId (int id) {
 		
 		List<Object> allObjects = this.listarTodos();
-		Object obj = getObjectById(allObjects, id);
+		Object obj = getObjectById(id);
 		return obj;
 	}
 }
