@@ -7,7 +7,6 @@ import br.edu.utfpr.dto.PaisDTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.java.Log;
@@ -40,86 +39,35 @@ public class PaisDAO extends TemplateDAO{
     	return "INSERT INTO pais (nome, sigla, codigoTelefone) VALUES (?, ?, ?)";
     }
     
-    PreparedStatement getIncluirPreparedStatement(String sql, Connection conn) throws SQLException {
-    	PreparedStatement statement = conn.prepareStatement(sql);
-    	//statement.setString(1, pais.getNome());
-      	//statement.setString(2, pais.getSigla());
-      	//statement.setInt(3, pais.getCodigoTelefone());
+    PreparedStatement getIncluirPreparedStatement(String sql, Object obj, PreparedStatement statement) throws SQLException {
+    	PaisDTO pais = (PaisDTO) obj;
+    	statement.setString(1, pais.getNome());
+      	statement.setString(2, pais.getSigla());
+      	statement.setInt(3, pais.getCodigoTelefone());
     	return statement;
     }
     
-//    public boolean incluir(PaisDTO pais) {
-//        try ( Connection conn = DriverManager.getConnection("jdbc:derby:memory:database")) {
-//
-//            String sql = "INSERT INTO pais (nome, sigla, codigoTelefone) VALUES (?, ?, ?)";
-//
-//            PreparedStatement statement = conn.prepareStatement(sql);
-//            statement.setString(1, pais.getNome());
-//            statement.setString(2, pais.getSigla());
-//            statement.setInt(3, pais.getCodigoTelefone());
-//
-//            int rowsInserted = statement.executeUpdate();
-//
-//            if (rowsInserted > 0) {
-//                return true;
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return false;
-//    }
-
-    public List<PaisDTO> listarTodos() {
-
-        List<PaisDTO> resultado = new ArrayList<>();
-
-        try ( Connection conn = DriverManager.getConnection("jdbc:derby:memory:database")) {
-
-            String sql = "SELECT * FROM pais";
-
-            Statement statement = conn.createStatement();
-            ResultSet result = statement.executeQuery(sql);
-
-            while (result.next()) {
-
-                resultado.add(
-                        PaisDTO.builder()
-                                .codigoTelefone(result.getInt("codigoTelefone"))
-                                .id(result.getInt("id"))
-                                .nome(result.getString("nome"))
-                                .sigla(result.getString("sigla"))
-                                .build()
-                );
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return resultado;
+    String getListarTodosSql() {
+    	return "SELECT * FROM pais";
     }
+    
+    List<Object> setObject(ResultSet obj) throws SQLException{
+    	List<Object> helper = new ArrayList<>();
+    	while(obj.next()) {
+    		helper.add(
+                    PaisDTO.builder()
+                            .codigoTelefone(obj.getInt("codigoTelefone"))
+                            .id(obj.getInt("id"))
+                            .nome(obj.getString("nome"))
+                            .sigla(obj.getString("sigla"))
+                            .build()
+            );
+    	}
+    	return helper;
+    }   
 
-    public boolean excluir(int id) {
-
-        try ( Connection conn = DriverManager.getConnection("jdbc:derby:memory:database")) {
-
-            String sql = "DELETE FROM pais WHERE id=?";
-
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, id);
-
-            int rowsDeleted = statement.executeUpdate();
-            if (rowsDeleted > 0) {
-                return true;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
+    String getExcluirSql() {
+    	return "DELETE FROM pais WHERE id=?";
     }
 
     public boolean alterar(PaisDTO pais) {
@@ -144,8 +92,7 @@ public class PaisDAO extends TemplateDAO{
         return false;
     }
     
-    public PaisDTO listarPorId (int id) {
-        return this.listarTodos().stream().filter(p -> p.getId() == id).findAny().orElseThrow(RuntimeException::new);
-    }
-
+    //public PaisDTO listarPorId (int id) {
+    //    return this.listarTodos().stream().filter(p -> p.getId() == id).findAny().orElseThrow(RuntimeException::new);
+    //}
 }
