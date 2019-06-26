@@ -3,7 +3,9 @@ package br.edu.utfpr.servico;
 import br.edu.utfpr.dto.ClienteDTO;
 import br.edu.utfpr.dto.PaisDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,5 +34,15 @@ public class ServicoCliente {
     @GetMapping("/servico/cliente")
     public ResponseEntity<List<ClienteDTO>> listar() {
         return ResponseEntity.ok(clientes);
+    }
+
+    @DeleteMapping("/servico/cliente/{id}")
+    public ResponseEntity excluir (@PathVariable int id) {
+
+        if (clientes.removeIf(c -> c.getId() == id))
+            return ResponseEntity.noContent().build();
+
+        else
+            return ResponseEntity.notFound().build();
     }
 }
